@@ -4,6 +4,17 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:task_list/task_list.dart';
 
+import 'dart:ffi'; // For FFI
+import 'dart:io'; // For Platform.isX
+
+final DynamicLibrary nativeAddLib = Platform.isAndroid
+    ? DynamicLibrary.open("libnative_add.so")
+    : DynamicLibrary.process();
+
+final int Function(int x, int y) nativeAdd = nativeAddLib
+    .lookup<NativeFunction<Int32 Function(Int32, Int32)>>("native_add")
+    .asFunction();
+
 void main() {
   runApp(MyApp());
 }
@@ -25,11 +36,10 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await TaskList.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      platformVersion = nativeAdd(2, 5).toString();
+    } on FormatException {
+      platformVersion = 'Failed to add numbers.';
     }
 
     // If the widget was removed from the tree while the asynchronous platform
