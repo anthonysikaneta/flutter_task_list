@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - task_list (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - task_list (from `.symlinks/plugins/task_list/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  task_list:
+    :path: ".symlinks/plugins/task_list/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  task_list: 47504fe31b900189a49243bc0771e5adfc6e7535
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.8.4
