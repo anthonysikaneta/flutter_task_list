@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter/services.dart';
 
-import 'package:english_words/english_words.dart';
+import 'package:task_list_example/models/Task.dart';
 
 class TaskList extends StatefulWidget {
   @override
@@ -10,22 +9,22 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
-  final _randomWordPairs = <WordPair>[];
-  final _savedWords = Set<WordPair>();
+  final _tasks = <Task>[];
+  final _savedTasks = Set<Task>();
 
   // this is where you insert your view
-  Widget _buildRow(WordPair pair) {
-    final saved = _savedWords.contains(pair);
+  Widget _buildRow(Task task) {
+    final saved = _savedTasks.contains(task);
     return ListTile(
-        title: Text(pair.asPascalCase, style: TextStyle(fontSize: 18)),
+        title: Text(task.title, style: TextStyle(fontSize: 18)),
         trailing: Icon(saved ? Icons.favorite : Icons.favorite_border,
             color: saved ? Colors.red : null),
         onTap: () {
           setState(() {
             if (saved) {
-              _savedWords.remove(pair);
+              _savedTasks.remove(task);
             } else {
-              _savedWords.add(pair);
+              _savedTasks.add(task);
             }
           });
         });
@@ -41,35 +40,33 @@ class _TaskListState extends State<TaskList> {
           }
           final index = item ~/ 2;
 
-          if (index >= _randomWordPairs.length) {
-            _randomWordPairs.addAll(generateWordPairs().take(10));
+          if (index >= _tasks.length) {
+            _tasks.addAll(generateTasks());
           }
 
-          return _buildRow(_randomWordPairs[index]);
+          return _buildRow(_tasks[index]);
         });
   }
 
   void _pushSaved() {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (BuildContext context) {
-      final Iterable<ListTile> tiles = _savedWords.map((WordPair pair) {
+      final Iterable<ListTile> tiles = _savedTasks.map((Task task) {
         return ListTile(
-            title: Text(pair.asPascalCase, style: TextStyle(fontSize: 16)));
+            title: Text(task.title, style: TextStyle(fontSize: 16)));
       });
 
       final List<Widget> divided =
           ListTile.divideTiles(context: context, tiles: tiles).toList();
 
       return Scaffold(
-          appBar: AppBar(title: Text('Saved Word Pairs')),
+          appBar: AppBar(title: Text('Saved Tasks')),
           body: ListView(children: divided));
     }));
   }
 
   @override
   Widget build(BuildContext context) {
-    final wordPair = WordPair.random();
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -79,6 +76,11 @@ class _TaskListState extends State<TaskList> {
           ],
         ),
         body: _buildList(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => {},
+          tooltip: 'Increment',
+          child: Icon(Icons.add),
+        ), // This trailing comma makes auto-formatting nicer for build methods.
       ),
     );
   }
